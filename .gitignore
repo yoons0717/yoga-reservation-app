@@ -1,0 +1,62 @@
+# 📂 기본적인 Node.js & npm 관련 무시 파일
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+*.log
+.DS_Store
+
+# 📂 환경 변수 파일 (보안)
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# 📂 Editor 설정 파일
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# 📂 OS별 불필요한 파일
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.bak
+
+# 📂 빌드 결과물 (백엔드 & 프론트엔드)
+apps/frontend/node_modules/
+apps/frontend/build/
+apps/frontend/.next/
+apps/frontend/out/
+
+apps/backend/node_modules/
+apps/backend/dist/
+apps/backend/build/
+
+# 📂 TypeScript 빌드 파일
+*.tsbuildinfo
+
+# 📂 Git 관련
+.git/
+.gitignore
+
+# 📂 Jest / Cypress 테스트 관련 파일
+coverage/
+apps/frontend/coverage/
+apps/backend/coverage/
+*.lcov
+
+# 📂 로그 및 캐시 파일
+logs/
+*.log
+yarn.lock
+pnpm-lock.yaml
+package-lock.json
