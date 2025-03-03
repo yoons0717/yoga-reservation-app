@@ -1,5 +1,4 @@
 # 📂 기본적인 Node.js & npm 관련 무시 파일
-node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -7,6 +6,7 @@ pnpm-debug.log*
 lerna-debug.log*
 *.log
 .DS_Store
+node_modules/
 
 # 📂 환경 변수 파일 (보안)
 .env
