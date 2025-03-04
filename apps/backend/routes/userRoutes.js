@@ -1,36 +1,16 @@
 const express = require('express');
 const User = require('../models/User');
+const { authenticate } = require('../middlewares/auth');
 
 const router = express.Router();
-
-// ✅ 1. 사용자(User) 등록 (POST /api/users)
-router.post('/', async (req, res) => {
+// 현재 로그인한 사용자 정보 조회
+router.get('/me', authenticate, async (req, res) => {
   try {
-    const { name, email, role } = req.body;
-    if (!name || !email) {
-      return res.status(400).json({ message: '이름과 이메일은 필수 입력값입니다.' });
-    }
-
-    const newUser = new User({
-      name,
-      email,
-      role: role || 'student', // 기본값: 일반 사용자(student)
-    });
-
-    await newUser.save();
-    res.status(201).json(newUser);
-  } catch (error) {
-    res.status(400).json({ message: '사용자 추가 실패', error });
-  }
-});
-
-// ✅ 2. 모든 사용자 조회 (GET /api/users)
-router.get('/', async (req, res) => {
-  try {
-    const users = await User.find(); // 모든 사용자 조회
-    res.status(200).json(users);
-  } catch (error) {
-    res.status(500).json({ message: '서버 오류', error });
+    const user = await User.findById(req.user.userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
 
