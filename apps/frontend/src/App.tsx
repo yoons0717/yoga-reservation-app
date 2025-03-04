@@ -1,36 +1,40 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import { GoogleOAuthProvider } from '@react-oauth/google';
-import Home from './pages/Home';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import RoleSelection from './pages/RoleSelection';
 import Login from './pages/Login';
-import 'tailwindcss/tailwind.css';
-
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-
-if (!GOOGLE_CLIENT_ID) {
-  console.error('❌ GOOGLE_CLIENT_ID가 설정되지 않았습니다!');
-}
+import ProtectedRoute from './components/ProtectedRoute';
+import AdminRouter from './routes/AdminRouter';
+import CenterRouter from './routes/CenterRouter';
 
 const App: React.FC = () => {
   return (
-    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-      <Router>
-        <div className="min-h-screen flex flex-col">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-          </Routes>
-          <nav className="fixed bottom-0 left-0 w-full bg-gray-800 text-white p-4 flex justify-around">
-            <Link to="/" className="px-4 py-2">
-              홈
-            </Link>
-            <Link to="/login" className="px-4 py-2">
-              로그인
-            </Link>
-          </nav>
-        </div>
-      </Router>
-    </GoogleOAuthProvider>
+    <Router>
+      <Routes>
+        <Route path="/select-role" element={<RoleSelection />} />
+        <Route path="/login" element={<Login />} />
+
+        {/* 관리자 전용 라우트 */}
+        <Route
+          path="/admin/*"
+          element={
+            <ProtectedRoute>
+              <AdminRouter />
+            </ProtectedRoute>
+          }
+        />
+        {/* 관리자 전용 라우트 */}
+        <Route
+          path="/center/*"
+          element={
+            <ProtectedRoute>
+              <CenterRouter />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route path="*" element={<Navigate to="/select-role" />} />
+      </Routes>
+    </Router>
   );
 };
 
