@@ -47,11 +47,24 @@ router.post('/', authenticate, checkRole('center'), async (req, res) => {
   }
 });
 
-// 센터 전용: 자신이 등록한 회원 목록 조회 (GET /api/center/members)
+// 센터 전용: 등록된 회원 목록 조회 (회원 정보 + 수강권 정보 포함) (GET /api/center/members)
 router.get('/', authenticate, checkRole('center'), async (req, res) => {
   try {
-    const members = await User.find({ role: 'member', center: req.user.userId });
-    res.status(200).json(members);
+    // 회원 목록 조회
+    const members = await User.find({
+      role: 'member',
+      center: req.user?.userId,
+    }).lean();
+
+    // 각 회원마다 수강권 정보 조회 (1:1 관계라고 가정)
+    const membersWithPass = await Promise.all(
+      members.map(async (member) => {
+        const pass = await Pass.findOne({ userId: member._id }).lean();
+        return { ...member, pass };
+      })
+    );
+
+    res.status(200).json(membersWithPass);
   } catch (err) {
     res.status(500).json({ message: 'Server error', error: err.message });
   }
